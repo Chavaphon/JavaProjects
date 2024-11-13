@@ -4,29 +4,27 @@ public class Main{
 
         Scanner sc = new Scanner(System.in);
 
-        int pokemonCount = 3;
+        int pokemonCount = 5;
 
         Empoleon empoleon = new Empoleon();
         Regice regice = new Regice();
         Slugma slugma = new Slugma();
+        Gardevoir gardevoir = new Gardevoir();
+        Flapple flapple = new Flapple();
 
-        System.out.print("(1) ");
-        empoleon.displayStats();
-        empoleon.displayPhysicalMove();
-        empoleon.displaySpecialMove();
-        System.out.println();
+        Pokemon[] arr = new Pokemon[pokemonCount];
+        arr[0] = empoleon;
+        arr[1] = regice;
+        arr[2] = slugma;
+        arr[3] = gardevoir;
+        arr[4] = flapple;
 
-        System.out.print("(2) ");
-        regice.displayStats();
-        regice.displayPhysicalMove();
-        regice.displaySpecialMove();
-        System.out.println();
-
-        System.out.print("(3) ");
-        slugma.displayStats();
-        slugma.displayPhysicalMove();
-        slugma.displaySpecialMove();
-        System.out.println();
+        for(int i = 0; i < pokemonCount; i++) {
+            System.out.print("("+(i+1)+") ");
+            arr[i].displayStats();
+            arr[i].displayMoves();
+            System.out.println();
+        }
 
         System.out.println("Choose Your Pokémon");
         System.out.println();
@@ -34,41 +32,38 @@ public class Main{
         Pokemon player1;
         int p1 = sc.nextInt();
         while(p1 < 1 || p1 > pokemonCount) {
-            System.out.println("invalid choice(1 - 3)");
+            System.out.println("invalid choice(1 - 5)");
             p1 = sc.nextInt();
         }
-        if(p1 == 1) {
-            player1 = new Empoleon();
-        }
-        else if(p1 == 2) {
-            player1 = new Regice();
-        }
-        else {
-            player1 = new Slugma();
-        }
+        player1 = switch (p1) {
+            case 2 -> new Regice();
+            case 3 -> new Slugma();
+            case 4 -> new Gardevoir();
+            case 5 -> new Flapple();
+            default -> new Empoleon();
+        };
 
         System.out.println("player1 chose: " + player1.getClass().getSimpleName());
 
         Pokemon player2;
         int p2 = sc.nextInt();
         while(p2 < 1 || p2 > pokemonCount) {
-            System.out.println("invalid choice(1 - 3)");
+            System.out.println("invalid choice(1 - 5)");
             p2 = sc.nextInt();
         }
-        if(p2 == 1) {
-            player2 = new Empoleon();
-        }
-        else if(p2 == 2) {
-            player2 = new Regice();
-        }
-        else {
-            player2 = new Slugma();
-        }
+        player2 = switch (p2) {
+            case 2 -> new Regice();
+            case 3 -> new Slugma();
+            case 4 -> new Gardevoir();
+            case 5 -> new Flapple();
+            default -> new Empoleon();
+        };
 
         System.out.println("player2 chose: " + player2.getClass().getSimpleName());
 
         while(!(player1.getFainted() || player2.getFainted())) {
             if(player1.getSpeed() >= player2.getSpeed()) {
+
                 System.out.println("what will player 1 do?");
                 ((PhysicalMove) player1).displayPhysicalMove();
                 ((SpecialMove) player1).displaySpecialMove();
@@ -104,6 +99,7 @@ public class Main{
                 }
             }
             else {
+
                 System.out.println("what will player 2 do?");
                 ((PhysicalMove) player2).displayPhysicalMove();
                 ((SpecialMove) player2).displaySpecialMove();
@@ -138,7 +134,6 @@ public class Main{
                     ((SpecialMove) player1).specialAttack(player2);
                 }
             }
-
         }
 
         if(player2.getFainted()) {
@@ -150,35 +145,55 @@ public class Main{
     }
 }
 interface WaterType {
-    final String WATER_TYPE_ADVANTAGE = "fire";
+    String WATER_TYPE_ADVANTAGE = "fire";
     public void ability();
 }
 
 interface SteelType {
-    final String STEEL_TYPE_ADVANTAGE = "ice";
+    String STEEL_TYPE_ADVANTAGE = "ice";
     public void ability();
 }
 
 interface IceType {
-    final String ICE_TYPE_ADVANTAGE = "flying";
+    String ICE_TYPE_ADVANTAGE = "flying";
     public void ability();
 }
 
 interface FireType {
-    final String FIRE_TYPE_ADVANTAGE = "grass";
+    String FIRE_TYPE_ADVANTAGE = "grass";
     public void ability();
 }
 
+interface PsychicType {
+    String PSYCHIC_TYPE_ADVANTAGE = "fighting";
+    public void ability();
+}
+
+interface FairyType {
+    String FAIRY_TYPE_ADVANTAGE = "dragon";
+    public void ability();
+}
+
+interface GrassType {
+    String GRASS_TYPE_ADVANTAGE = "water";
+    public void ability();
+}
+
+interface DragonType {
+     String DRAGON_TYPE_ADVANTAGE = "dragon";
+    public void ability();
+}
 interface PhysicalMove {
-    final double STAB = 1.5;
-    final double EFFECTIVE = 2.0;
+
+    double STAB = 1.5;
+    double EFFECTIVE = 2.0;
     public void physicalAttack(Pokemon defender);
     public void displayPhysicalMove();
 }
 
 interface SpecialMove {
-    final double STAB = 1.5;
-    final double EFFECTIVE = 2.0;
+    double STAB = 1.5;
+    double EFFECTIVE = 2.0;
     public void specialAttack(Pokemon defender);
     public void displaySpecialMove();
 }
@@ -233,6 +248,9 @@ class Pokemon {
         }
         System.out.println();
     }
+    public void displayMoves() {
+
+    }
 }
 class Empoleon extends Pokemon implements WaterType, SteelType, PhysicalMove, SpecialMove{
     public Empoleon() {
@@ -243,6 +261,10 @@ class Empoleon extends Pokemon implements WaterType, SteelType, PhysicalMove, Sp
         this.SPECIAL_DEFENSE = 101;
         this.SPEED = 60;
         this.type = "water";
+    }
+    public void displayMoves() {
+        displayPhysicalMove();
+        displaySpecialMove();
     }
     @Override
     public void recieveDamage(int dmg) {
@@ -263,13 +285,12 @@ class Empoleon extends Pokemon implements WaterType, SteelType, PhysicalMove, Sp
     }
     public void physicalAttack(Pokemon defender) {
         String name = "aquaJett";
-        double damage = ((2.4 * 40 * (this.ATTACK / defender.getDEFENSE())) / 50.0) * PhysicalMove.STAB * damageBoost;
+        double damage = ((2.4 * 40 * (this.ATTACK / defender.getDEFENSE())) / 10.0) * PhysicalMove.STAB * damageBoost;
         System.out.println(this.getClass().getSimpleName() + " used " + name);
         if((WATER_TYPE_ADVANTAGE).equals(defender.getType())) {
             damage *= PhysicalMove.EFFECTIVE;
             System.out.println("ITS SUPER EFFECTIVE");
         }
-
         defender.recieveDamage((int) damage);
     }
 
@@ -279,21 +300,18 @@ class Empoleon extends Pokemon implements WaterType, SteelType, PhysicalMove, Sp
 
     public void specialAttack(Pokemon defender) {
         String name = "flashCannon";
-        double damage = ((2.4 * 80 * (this.ATTACK / defender.getSPECIAL_DEFENSE())) / 50.0) * SpecialMove.STAB * damageBoost;
+        double damage = ((2.4 * 80 * (this.SPECIAL_ATTACK / defender.getSPECIAL_DEFENSE())) / 10.0) * SpecialMove.STAB * damageBoost;
         System.out.println(this.getClass().getSimpleName() + " used " + name);
         if((STEEL_TYPE_ADVANTAGE).equals(defender.getType())) {
             damage *= SpecialMove.EFFECTIVE;
             System.out.println("ITS SUPER EFFECTIVE");
         }
-
         defender.recieveDamage((int) damage);
     }
-
     public void displaySpecialMove() {
         System.out.println("(2) FlashCannon(steel): 80");
     }
 }
-
 class Regice extends Pokemon implements IceType, PhysicalMove, SpecialMove{
     public Regice() {
         this.HP = 80;
@@ -303,6 +321,10 @@ class Regice extends Pokemon implements IceType, PhysicalMove, SpecialMove{
         this.SPECIAL_DEFENSE = 200;
         this.SPEED = 50;
         this.type = "ice";
+    }
+    public void displayMoves() {
+        displayPhysicalMove();
+        displaySpecialMove();
     }
     public void ability() {
         //No ability
@@ -315,26 +337,21 @@ class Regice extends Pokemon implements IceType, PhysicalMove, SpecialMove{
             damage *= PhysicalMove.EFFECTIVE;
             System.out.println("ITS SUPER EFFECTIVE");
         }
-
         defender.recieveDamage((int) damage);
     }
-
     public void displayPhysicalMove() {
         System.out.println("(1) Avalanche(ice): 60");
     }
-
     public void specialAttack(Pokemon defender) {
         String name = "iceBeam";
-        double damage = ((2.4 * 90 * (this.ATTACK / defender.getSPECIAL_DEFENSE())) / 10.0) * SpecialMove.STAB * damageBoost;
+        double damage = ((2.4 * 90 * (this.SPECIAL_ATTACK / defender.getSPECIAL_DEFENSE())) / 10.0) * SpecialMove.STAB * damageBoost;
         System.out.println(this.getClass().getSimpleName() + " used " + name);
         if((ICE_TYPE_ADVANTAGE).equals(defender.getType())) {
             damage *= SpecialMove.EFFECTIVE;
             System.out.println("ITS SUPER EFFECTIVE");
         }
-
         defender.recieveDamage((int) damage);
     }
-
     public void displaySpecialMove() {
         System.out.println("(2) IceBeam(ice): 90");
     }
@@ -349,38 +366,130 @@ class Slugma extends Pokemon implements FireType, PhysicalMove, SpecialMove{
         this.SPEED = 20;
         this.type = "fire";
     }
+    public void displayMoves() {
+        displayPhysicalMove();
+        displaySpecialMove();
+    }
     public void ability() {
         //No ability
     }
     public void physicalAttack(Pokemon defender) {
-        String name = "earthquake";
-        double damage = ((2.4 * 100 * (this.ATTACK / defender.getDEFENSE())) / 10.0) * PhysicalMove.STAB * damageBoost;
+        String name = "flameCharge";
+        double damage = ((2.4 * 50 * (this.ATTACK / defender.getDEFENSE())) / 10.0) * PhysicalMove.STAB * damageBoost;
         System.out.println(this.getClass().getSimpleName() + " used " + name);
         if((FIRE_TYPE_ADVANTAGE).equals(defender.getType())) {
+            damage *= PhysicalMove.EFFECTIVE;
+            System.out.println("ITS SUPER EFFECTIVE");
+        }
+        defender.recieveDamage((int) damage);
+    }
+    public void displayPhysicalMove() {
+        System.out.println("(1) Earthquake(ground): 100");
+    }
+    public void specialAttack(Pokemon defender) {
+        String name = "ember";
+        double damage = ((2.4 * 40 * (this.SPECIAL_ATTACK / defender.getSPECIAL_DEFENSE())) / 10.0) * SpecialMove.STAB * damageBoost;
+        System.out.println(this.getClass().getSimpleName() + " used " + name);
+        if((FIRE_TYPE_ADVANTAGE).equals(defender.getType())) {
+            damage *= SpecialMove.EFFECTIVE;
+            System.out.println("ITS SUPER EFFECTIVE");
+        }
+        defender.recieveDamage((int) damage);
+    }
+    public void displaySpecialMove() {
+        System.out.println("(2) Ember(fire): 40");
+    }
+}
+class Gardevoir extends Pokemon implements PsychicType, FairyType, PhysicalMove, SpecialMove{
+    public Gardevoir() {
+        this.HP = 68;
+        this.ATTACK = 65;
+        this.DEFENSE = 65;
+        this.SPECIAL_ATTACK = 125;
+        this.SPECIAL_DEFENSE = 115;
+        this.SPEED = 80;
+        this.type = "psychic";
+    }
+    public void displayMoves() {
+        displayPhysicalMove();
+        displaySpecialMove();
+    }
+    public void ability() {
+        //No ability
+    }
+    public void physicalAttack(Pokemon defender) {
+        String name = "zenHeadbutt";
+        double damage = ((2.4 * 80 * (this.ATTACK / defender.getDEFENSE())) / 10.0) * PhysicalMove.STAB * damageBoost;
+        System.out.println(this.getClass().getSimpleName() + " used " + name);
+        if((PSYCHIC_TYPE_ADVANTAGE).equals(defender.getType())) {
             damage *= PhysicalMove.EFFECTIVE;
             System.out.println("ITS SUPER EFFECTIVE");
         }
 
         defender.recieveDamage((int) damage);
     }
-
     public void displayPhysicalMove() {
-        System.out.println("(1) Earthquake(ground): 100");
+        System.out.println("(1) ZenHeadbutt(psychic): 80");
     }
-
     public void specialAttack(Pokemon defender) {
-        String name = "ember";
-        double damage = ((2.4 * 40 * (this.ATTACK / defender.getSPECIAL_DEFENSE())) / 10.0) * SpecialMove.STAB * damageBoost;
+        String name = "drainingKiss";
+        double damage = ((2.4 * 50 * (this.SPECIAL_ATTACK / defender.getSPECIAL_DEFENSE())) / 10.0) * SpecialMove.STAB * damageBoost;
         System.out.println(this.getClass().getSimpleName() + " used " + name);
-        if((FIRE_TYPE_ADVANTAGE).equals(defender.getType())) {
+        if((FAIRY_TYPE_ADVANTAGE).equals(defender.getType())) {
             damage *= SpecialMove.EFFECTIVE;
             System.out.println("ITS SUPER EFFECTIVE");
         }
 
         defender.recieveDamage((int) damage);
     }
-
     public void displaySpecialMove() {
-        System.out.println("(2) Ember(fire): 40");
+        System.out.println("(2) DrainingKiss(fairy): 50");
+    }
+}
+class Flapple extends Pokemon implements GrassType, DragonType, PhysicalMove, SpecialMove{
+    public Flapple() {
+        this.HP = 70;
+        this.ATTACK = 110;
+        this.DEFENSE = 80;
+        this.SPECIAL_ATTACK = 95;
+        this.SPECIAL_DEFENSE = 60;
+        this.SPEED = 70;
+        this.type = "grass";
+    }
+    public void displayMoves() {
+        displayPhysicalMove();
+        displaySpecialMove();
+    }
+    public void ability() {
+        //No ability
+    }
+    public void physicalAttack(Pokemon defender) {
+        String name = "trailblaze";
+        double damage = ((2.4 * 50 * (this.ATTACK / defender.getDEFENSE())) / 10.0) * PhysicalMove.STAB * damageBoost;
+        System.out.println(this.getClass().getSimpleName() + " used " + name);
+        if((GRASS_TYPE_ADVANTAGE).equals(defender.getType())) {
+            damage *= PhysicalMove.EFFECTIVE;
+            System.out.println("ITS SUPER EFFECTIVE");
+        }
+
+        defender.recieveDamage((int) damage);
+    }
+    public void displayPhysicalMove() {
+        System.out.println("(1) Trailblaze(grass): 50");
+    }
+
+    public void specialAttack(Pokemon defender) {
+        String name = "dragonPulse";
+        double damage = ((2.4 * 85 * (this.SPECIAL_ATTACK / defender.getSPECIAL_DEFENSE())) / 10.0) * SpecialMove.STAB * damageBoost;
+        System.out.println(this.getClass().getSimpleName() + " used " + name);
+        if((DRAGON_TYPE_ADVANTAGE).equals(defender.getType())) {
+            damage *= SpecialMove.EFFECTIVE;
+            System.out.println("ITS SUPER EFFECTIVE");
+        }
+
+        defender.recieveDamage((int) damage);
+    }
+    public void displaySpecialMove() {
+        System.out.println("(2) DragonPulse(dragon): 50");
     }
 }
